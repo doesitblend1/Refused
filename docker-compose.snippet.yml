@@ -1,0 +1,20 @@
+# Add next to your Remux service. Point Infuse at THIS container's published
+# port instead of Remux. Refused replaces remux-stream-strip-proxy; run one
+# or the other, not both on the same port.
+services:
+  refused:
+    build:
+      context: ./refused
+    container_name: refused
+    restart: unless-stopped
+    env_file:
+      - ./refused/.env
+    environment:
+      LISTEN_PORT: "8080"
+    volumes:
+      # settings.json, refused.db (poster state), session key
+      - ./refused/data:/data
+    ports:
+      # LAN-visible so Infuse devices can reach it. Use 127.0.0.1:8099:8080
+      # if only a local reverse proxy should.
+      - "8099:8080"
